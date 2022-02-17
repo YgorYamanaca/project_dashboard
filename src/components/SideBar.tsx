@@ -1,9 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PageURL } from 'types/pagesType';
 
 const SideBar: React.FC = () => {
-  let navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const pageOptions = [
     {
@@ -26,7 +27,11 @@ const SideBar: React.FC = () => {
       />
       <div id='sidebar-items-id' className='flex flex-col gap-3'>
         {pageOptions.map(pageOption => 
-          <div key={`page-${pageOption.pageTitle}-id`} id={`page-${pageOption.pageTitle}-id`} className='w-auto hover:backdrop-brightness-105 cursor-pointer'>
+          <div
+            key={`page-${pageOption.pageTitle}-id`}
+            id={`page-${pageOption.pageTitle}-id`}
+            className={`w-auto hover:bg-secondaryColor cursor-pointer ${location.pathname === pageOption.pageLink && 'bg-secondaryColor'}`}
+          >
             <p
               className="text-xl text-center text-textColor p-3 select-none"
               onClick={() => navigate(pageOption.pageLink)}
