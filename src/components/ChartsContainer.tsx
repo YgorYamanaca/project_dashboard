@@ -3,8 +3,9 @@ import AppContainer from 'components/AppContainer';
 import BarChart from 'components/BarChart';
 import LineChart from 'components/LineChart';
 import { SalesDataInterface, SalesInterface } from 'interface/salesData';
+import PieChart from 'components/PieChart';
 
-type ChartType = 'LINE' | 'BAR';
+type ChartType = 'LINE' | 'BAR' | 'PIE';
 
 interface ChartsContainerInterface {
   chartData: SalesDataInterface, 
@@ -23,6 +24,8 @@ const ChartsContainer: React.FC<ChartsContainerInterface> = ({
         return <LineChart chartTitle={chartData.category} data={transformToChartData(chartData.sales)} />
       case 'BAR':
         return <BarChart chartTitle={chartData.category} data={transformToChartData(chartData.sales)} />
+      case 'PIE':
+        return <PieChart data={transformToPIEChartData(chartData.sales)} />
       default:
     }
   },[chartType, firstYear, lastYear]);
@@ -45,6 +48,57 @@ const ChartsContainer: React.FC<ChartsContainerInterface> = ({
           backgroundColor: 'rgba(53, 162, 235, 0.5)',
         },
       ]
+    }
+  }, [firstYear, lastYear]);
+
+  const transformToPIEChartData = useCallback((salesData: SalesInterface[]) => {
+    const labels = salesData.map(saleData => saleData.year >= firstYear && saleData.year <= lastYear ? saleData.year.toString() : '').filter(year => year !== '');
+    return {
+      labels,
+      datasets: [
+        {
+          label: '# of Votes',
+          data: salesData.map(sale => sale.e_commerce),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+        },
+        {
+          label: '# of Votes',
+          data: salesData.map(sale => sale.total),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+        }
+      ],
     }
   }, [firstYear, lastYear]);
 
@@ -76,6 +130,12 @@ const ChartsContainer: React.FC<ChartsContainerInterface> = ({
           />
         </div>
         <div className="mb-3 pt-0">
+          <button
+            className={`bg-primaryColor text-textColor font-bold py-1 px-2 rounded hover:bg-secondaryColor ${chartType === 'PIE' && 'bg-secondaryColor'}`}
+            onClick={() => setChartType('PIE')}
+          >
+              PIE
+          </button>
           <button
             className={`bg-primaryColor text-textColor font-bold py-1 px-2 rounded hover:bg-secondaryColor ${chartType === 'BAR' && 'bg-secondaryColor'}`}
             onClick={() => setChartType('BAR')}

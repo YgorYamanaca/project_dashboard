@@ -5,7 +5,7 @@ import React from 'react';
 const DashBoardPage: React.FC = () => {
 
   return (
-    <div id='dashboard-page-id' className='flex flex-col gap-3 w-full overflow-y-auto justify-center items-center my-6'>
+    <div id='dashboard-page-id' className='flex justify-start flex-col gap-3 w-full overflow-y-auto items-center my-6'>
       {
         salesData.map(saleData => (
           <ChartsContainer key={saleData.category} chartData={saleData} />
